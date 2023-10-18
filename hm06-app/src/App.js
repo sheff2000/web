@@ -15,6 +15,7 @@ function App() {
  
   const btnBackFromFoto = () => {      // возврат с просмотра списка фото конкретного альбома
     setShowFoto(false);
+    setFoto([]);
     setCurrentTitleAlbum(null);
   };
   
