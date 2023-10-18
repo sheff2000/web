@@ -1,0 +1,69 @@
+.menu-fixed{
+    position: fixed;
+    top: 0px;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    display: block;
+    padding: 30px 20px 50px 20px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background-color: #333;
+    border-right: 1px solid #000;
+    color: #fff;
+    text-align: left;
+    text-shadow: 0 1px 10px rgba(0, 0, 0, .5);
+}
+.content{
+    color: #333;
+    background-color: #fafafa;
+    padding: 30px 30px 50px 30px;
+}
+h3 {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+.btn-outline-info {
+    width: 100%;
+    text-align: center;
+    color: #eee;
+}
+.btn-outline-info:hover,
+.btn-outline-info:focus {
+  color: #333;
+  text-shadow: none; 
+  /*background-color: #fff; */
+  border: 1px solid #333;
+}
+
+.menu-div-btn{
+    margin-top: 30px;
+}
+.label-name, .label-name .badge{
+    font-size: 16px;
+}
+.label-name .badge {
+    float: right;
+    background-color: #f0ad4e;
+}
+.albums-div h1 {
+    padding-top: 20px;
+}
+.albums-div .badge {
+    margin-left: 40px;
+    font-size: 14px;
+}
+.albums-div .btn{
+    margin-right: 30px;
+}
+.user-card {
+    background-color: #eae7e7;
+    padding: 10px 0px 0px 0px;
+}
+.user-card .user-info {
+    padding-left: 30px;
+}
+.user-card .user-btn {
+    vertical-align: middle;
+    text-align: center;
+}
