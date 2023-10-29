@@ -1,4 +1,5 @@
 <script setup>
+    import ButtonPage from './header/ButtonPage.vue';
 </script>
 <template>
     <div class="row">
@@ -9,7 +10,8 @@
             Count - <span class="badge bg-secondary">10</span>
         </div>
         <div class="col">
-            Page - 1 (5)
+            <ButtonPage :name="'Prev'" />
+            <ButtonPage :name="'Next'" />
         </div>
     </div>
 </template>
