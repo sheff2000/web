@@ -1,30 +1,62 @@
 <script setup>
     import { defineProps } from 'vue';
+    import { useRouter } from 'vue-router';
+    import {usePilots} from '@/stores/pilotsStore';
+    import { useHeader } from '@/stores/headerStore';
 
-    defineProps({
-        shipItem: {
-            type: Object,
-            required: true
-        }
+    const pilots = usePilots();
+    const router = useRouter();
+    const storeHeader = useHeader();
+    
+    const { shipItem } = defineProps({
+        shipItem: Object,
+        default: {}
     });
+
+    const isDisabled = !(shipItem.pilots.length > 0);
+
+    const gotoRouterPilots = () => {
+        pilots.setPilots_url(shipItem.pilots);
+        pilots.shipName = shipItem.name;
+        pilots.shipModel = shipItem.model;
+
+        storeHeader.nowPage = 'pilots';
+        storeHeader.titlePage = `Pilots from ${shipItem.name}`;
+
+        router.push('/pilots');
+    }
 
 </script>
 
 <template>
     <div class="card" style="width: 18rem;">
-        <img src="..." class="card-img-top" alt="...">
         <div class="card-body">
-            <h5 class="card-title">{{ shipItem.name }}</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <h5 class="card-title">{{ shipItem.model }}</h5>
+            <p class="card-text">
+                <b>Name: </b> {{ shipItem.name }}<br>
+                <b>Model: </b> {{ shipItem.model }}<br>
+                <b>Manufacturer: </b> {{ shipItem.manufacturer }}<br>
+            </p>
+        </div>
+       
+        <div class="card-body">
+            <button class="btn btn-light" :disabled="isDisabled" @click="gotoRouterPilots">Watch pilots</button>
         </div>
         <ul class="list-group list-group-flush">
-            <li class="list-group-item">An item</li>
-            <li class="list-group-item">A second item</li>
-            <li class="list-group-item">A third item</li>
+            <li class="list-group-item">cost in credits: {{ shipItem.cost_in_credits  }}</li>
+            <li class="list-group-item">starship class: {{ shipItem.starship_class  }}</li>
         </ul>
-        <div class="card-body">
-            <RouterLink to="/" class="card-link">Card link</RouterLink>
-            <RouterLink to="/" class="card-link">Another link</RouterLink>
-        </div>
     </div>
 </template>
+<style scoped>
+    .card {
+        height: 350px;
+        overflow: hidden;
+        background-color: #6c757d;
+        margin-top: 15px;
+        color: #f8f9fa;
+    }
+    .card-title {
+        color: #0dcaf0;
+    }
+</style>

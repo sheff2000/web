@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const BASE_URL = 'https://swapi.dev/api';
 
-export const fetchStarships = async (nowPage) => {
+export const fetchStarships = async (nowPage = 0) => {
   try {
     let response = {};
     if (nowPage === 0)
@@ -20,6 +20,17 @@ export const fetchStarships = async (nowPage) => {
   }
 };
 
+
+export const fetchPilot = async (urlPilot) => {
+  try {
+        const response = await axios.get(urlPilot);
+    return response.data;
+  } catch (error) {
+        console.error(`Error fetching pilot with url ${urlPilot}:`, error);
+    throw error;
+  }
+};
+/*
 export const fetchPilot = async (pilotId) => {
   try {
         const response = await axios.get(`${BASE_URL}/people/${pilotId}/`);
@@ -28,4 +39,4 @@ export const fetchPilot = async (pilotId) => {
         console.error(`Error fetching pilot with ID ${pilotId}:`, error);
     throw error;
   }
-};
+};*/
