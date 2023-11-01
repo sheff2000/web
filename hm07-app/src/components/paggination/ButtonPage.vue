@@ -1,45 +1,25 @@
 <script setup>
-    import {computed, defineProps } from 'vue';
-    import { useShips } from '@/stores/shipStore'
-
-    const { name } = defineProps({
+    
+    const { name, isDisabled , text} = defineProps({
         name: {
+            type: String
+        },
+        text: {
             type: String,
-            required: true
+            default: 'Page'
+        },
+        isDisabled: {
+            type: Boolean,
+            default: true
         }
     });
-
-    let nameBTN = name === 'Prev' ? 'Prev Page' : (name === 'Next' ? 'Next Page' : '');
-   
-
-    const shipsStore = useShips();
-
-    // disabled/enabled btn
-    const isDisabled = computed(() => {
-        if (name === 'Prev') {
-            return shipsStore.prevBtn;
-        }
-        if (name === 'Next') {
-            return shipsStore.nextBtn;
-        }
-        return false;
-    });
-
-    function clickBTN() {
-        if (name === 'Prev') {
-            shipsStore.prevPage(); 
-        }
-        if (name === 'Next') {
-            shipsStore.nextPage(); 
-        }
-    }
 </script>
 <template>
     <button class="btn btn-outline-light" 
-        :disabled="!isDisabled"  
-        @click="clickBTN()">
+        :disabled="isDisabled"  
+        @click="$emit('clickBTN', name)">
 
-            {{ nameBTN }}
+            {{ text }}
 
     </button>
 </template>

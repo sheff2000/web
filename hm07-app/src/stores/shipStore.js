@@ -6,33 +6,104 @@ export const useShips = defineStore('ship',{
         countAllShips: 0,
         countInNowPageShips: 0,
         nowLoad: true, // флаг процесса загрузки, если тру - значит сейчас ждем ответ от АПИ
-        ships: []
+        dateShips: [],
+        //{
+        //    ships:[],
+        //    next: null,
+        //    prev: null
+        //}
+        nowPage: 1
     }),
 
     getters: {
         currentPageShips: (state) => {
-            return state.ships;
+            
+            if (state.dateShips[state.nowPage - 1]) {
+                //console.log ('enter data dateShips - ', state.dateShips[state.nowPage - 1].ships);
+                return state.dateShips[state.nowPage - 1].ships;
+            } else {
+                return false;
+            }
+            
+        },
+        isDisabledPrevBTN: (state) => {
+            if (state.dateShips[state.nowPage - 1]) {
+                return !state.dateShips[state.nowPage - 1].prev;
+            } else {
+                return true;
+            }
+        },
+        isDisabledNextBTN: (state) => {
+            if (state.dateShips[state.nowPage - 1]) {
+                return !state.dateShips[state.nowPage - 1].next;
+            } else {
+                return true;
+            }
         }
     },
 
     actions: {
         async getShips() {
             try {
-                const tmp_ships = await fetchStarships();
+                this.nowLoad = true;
 
-                console.log('get data - ', tmp_ships);
-                console.log('next - ', tmp_ships.next);
-                console.log('prev - ', tmp_ships.prev);
-                console.log('count - ', tmp_ships.count);
-                console.log('count on Page - ', tmp_ships.results.length);
+                //console.log ('now Load = ', this.nowLoad);
 
+                const tmp_ships = await fetchStarships(this.nowPage);
+
+                this.dateShips[this.nowPage-1] = {
+                    ships : tmp_ships.results,
+                    next  : tmp_ships.next,
+                    prev  : tmp_ships.previous
+                };
+
+                //console.log('Load this data (page - ', this.nowPage,') - ', this.dateShips[this.nowPage-1]);
+
+                this.nowLoad = false;
                 this.countAllShips = tmp_ships.count;
                 this.countInNowPageShips = tmp_ships.results.length;
-                this.ships = tmp_ships.results;
 
             } catch(error) {
-                console.error("Error loading starships:", error);
+                //console.error("Error loading starships:", error);
+                this.nowLoad = false;
+                this.error = true;
+                this.textError = error.message;
             }
+        },
+
+        nextPage() {
+            this.nowPage++;
+            this._loadPage();
+        },
+
+        prevPage() {
+            this.nowPage--;
+            this._loadPage();
+        },
+
+        async _loadPage() {
+            this.error = false;
+
+            if (this.nowPage-1 < 0) {
+                this.error = true;
+                this.textError = 'Error. Please RELOAD page';
+                return false;
+            }
+
+            if (!this.dateShips[this.nowPage-1]) {
+                console.log('Not isset page - ', this.nowPage, ' --- LOAD this');
+                try {
+                    await this.getShips();
+                } catch (error) {
+                    if (error.response && error.response.status === 404) {
+                        this.error = true;
+                        this.textError = 'Страница не найдена - ' + error.response.data.detail;
+                    } else {
+                        this.error = true;
+                        this.textError = 'Произошла ошибка при загрузке данных';
+                    }
+                }
+            } 
         }
     }
 });
@@ -53,18 +124,6 @@ export const useShips = defineStore('ships', {
     textError: null,
   }),
 
-  getters: {
-    currentPageShips: (state) => {
-        return state.ships[state.nowPage - 1] || [];
-    },
-    nextBtn: (state) => {
-        // Вы можете добавить другую логику проверки, если необходимо
-        return state.nowPage < state.ships.length;
-    },
-    prevBtn: (state) => {
-        return state.nowPage > 0;
-    }
-  },
 
   actions: {
     async getShips(page = 1) {

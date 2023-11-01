@@ -1,8 +1,9 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router';
 import Header from './components/Header.vue';
-import ShipList from './views/ShipList.vue';
-import ProgressBar from './components/ProgressBar.vue';
+import { useShips } from '@/stores/shipStore'
+const ships = useShips();
+ships.getShips();
 </script>
 
 <template>
@@ -11,8 +12,6 @@ import ProgressBar from './components/ProgressBar.vue';
     </div>
         
     <div class="container text-center" id="body">
-       <!-- <ProgressBar />
-        <ShipList /> -->
         <RouterView />
     </div>
 </template>

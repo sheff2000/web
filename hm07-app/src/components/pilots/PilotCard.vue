@@ -1,42 +1,39 @@
 <script setup>
-  import { defineProps } from 'vue';
-
+  import BlinkText from '../BlinkText.vue';
   const {pilotData} = defineProps({
     pilotData: Object,
     default: {}
   });
-
-  console.log('IN CARD PILOT - ', pilotData);
 </script>
 
 <template>
-    <div class="card" style="width: 18rem;">
+    <div class="card" style="width: 18rem;" :class="{ 'card-cmpl': pilotData.ready, 'card-load': !pilotData.ready }">
         <div class="card-body">
-            <h5 class="card-title">{{pilotData.info.name}}</h5>
+            <BlinkText v-if="!pilotData.ready" :stopFlag="!pilotData.ready" />
+            <h5 v-else class="card-title">{{pilotData.info.name}}</h5>
+            <div>
+                <p>
+                    <b>Birth year: </b> {{pilotData.info.birth_year}}<br>
+                    <b>Gender: </b> {{pilotData.info.gender}}<br>
+                    <b>Height: </b> {{pilotData.info.height}}<br>
+                </p>
+            </div>
         </div>
        
-        <div class="card-body">
-            <p class="card-text">
-                <b>Name: </b> ffff<br>
-                <b>Model: </b> ssdsds<br>
-                <b>Manufacturer: </b> svcxvcxv<br>
-            </p>
-        </div>
-        <ul class="list-group list-group-flush">
-            <li class="list-group-item">cost in credits: </li>
-            <li class="list-group-item">starship class: </li>
-        </ul>
     </div>
 </template>
 <style scoped>
     .card {
-        height: 350px;
-        overflow: hidden;
-        background-color: #6c757d;
         margin-top: 15px;
         color: #f8f9fa;
     }
+    .card-cmpl {
+        background-color: #8e97a0;
+    }
+    .card-load {
+        background-color: #b28888;
+    }
     .card-title {
-        color: #0dcaf0;
+        color: #0b5a6a;
     }
 </style>

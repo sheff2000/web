@@ -15,5 +15,10 @@
     }
 </script>
 <template>
-    <button type="button" class="btn btn-outline-light" @click="backToShipList"> Back to Ships List</button>
+    <button type="button" 
+        :disabled="storeHeader.isLoadPage" 
+        class="btn btn-outline-light" 
+        @click="backToShipList">
+             Back to Ships List
+    </button>
 </template>

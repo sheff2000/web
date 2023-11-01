@@ -1,5 +1,4 @@
 <script setup>
-    import { defineProps } from 'vue';
     import { useRouter } from 'vue-router';
     import {usePilots} from '@/stores/pilotsStore';
     import { useHeader } from '@/stores/headerStore';
@@ -40,7 +39,12 @@
         </div>
        
         <div class="card-body">
-            <button class="btn btn-light" :disabled="isDisabled" @click="gotoRouterPilots">Watch pilots</button>
+            <button class="btn btn-light" 
+                :class="{ 'btn-outline-light': isDisabled, 'btn-light': !isDisabled }"
+                :disabled="isDisabled" 
+                @click="gotoRouterPilots">
+                    Watch pilots
+            </button>
         </div>
         <ul class="list-group list-group-flush">
             <li class="list-group-item">cost in credits: {{ shipItem.cost_in_credits  }}</li>

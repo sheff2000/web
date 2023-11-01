@@ -3,10 +3,11 @@ import {fetchPilot} from '@/api/swapi';
 
 export const usePilots = defineStore('pilots',{
     state: () => ({
-        pilots_info: [],
-        shipName: null,
-        shipModel: null,
-        error: false,
+        pilots_info: [],  // массив обектов (ссылка, инфва про пилота, флаг готовности инфы)
+        nowLoad: true,    // true - диет загрузка данных
+        shipName: null,   // название коробля
+        shipModel: null,  // название модели корабля
+        error: false,     // флаг наличия ошибки
         textError: null
     }),
 
@@ -16,7 +17,6 @@ export const usePilots = defineStore('pilots',{
 
     actions: {
         async setPilots_url(pilots_url) {
-
             this.pilots_info = [];
             pilots_url.forEach( (item) => {
 
@@ -31,37 +31,31 @@ export const usePilots = defineStore('pilots',{
                 this.pilots_info.push(pilot_info);
             });
 
-            console.log(this.pilots_info);
+            //console.log(this.pilots_info);
         },
 
         async getPilotsInfo() {
+            this.nowLoad = true;
             try {
-                this.pilots_info.forEach( async (item, index) => {
+                this.nowLoad = true;
+                //console.log('Start FETCH PILOT');
+                for (const item of this.pilots_info) {
                     const tmp = await fetchPilot(item.url);
-                    item.ready = true;
+                    
                     item.info = tmp;
-                });
-
-                console.log('get data  PILOT - ', this.pilots_info);
-               /* const tmp_ships = await fetchStarships();
-
-                console.log('get data - ', tmp_ships);
-                console.log('next - ', tmp_ships.next);
-                console.log('prev - ', tmp_ships.prev);
-                console.log('count - ', tmp_ships.count);
-                console.log('count on Page - ', tmp_ships.results.length);
-
-                this.countAllShips = tmp_ships.count;
-                this.countInNowPageShips = tmp_ships.results.length;
-                this.ships = tmp_ships.results; */
-
+                    item.ready = true;
+                    //console.log('Load pilots url - ', item.url, ' Ready = ', item.ready);
+                }
+                //console.log('END FETCH PILOTS');
+                //console.log('get data PILOT - ', this.pilots_info);
                 this.error = false;
-
-            } catch(error) {
-                console.error("Error loading starships:", error);
+            } catch (error) {
+                console.error("Error loading pilots:", error);
                 this.error = true;
-                this.textError = `Error loading starships: ${error}`;
-            } 
+                this.textError = `Error loading pilots: ${error}`;
+            } finally {
+                this.nowLoad = false;
+            }
         }
     }
 });

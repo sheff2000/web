@@ -5,19 +5,15 @@
     
     const ships = useShips();
     
-
-    onMounted(() => {
-        ships.getShips();
-    });
-
-    //console.log('Count ship - ', ships.countShip);
-    //console.log('List ship - ', ships.ships);
 </script>
 
 <template>
     <div v-if="ships.error" class="alert alert-danger">{{ ships.textError }}</div>
-    <div class="row ">
-        <div class="col" v-for="starship in ships.currentPageShips" :key="starship.url">
+    <div v-else class="row ">
+        <div class="alert alert-warning" v-if="!ships.currentPageShips">
+            await ....
+        </div>
+        <div class="col" v-else v-for="starship in ships.currentPageShips">
             <ShipCard :shipItem="starship" />
         </div>
     </div>
