@@ -1,3 +1,5 @@
+
+/// тестовая песочница  
 import { Buffer } from 'node:buffer';
 import CodeBufferClass from './Classes/CodeBufferClass.js';
 
@@ -26,7 +28,6 @@ buffersArray.forEach( (buffer, index) => {
 
 import jschardet from 'jschardet';
 
-// Определить кодировку
 const result = jschardet.detect(buffersArray[3]);
 
 console.log('Определенная кодировка:', result.encoding, ' SLOVO - ', buffersArray[3].toString(result.encoding) );
@@ -72,11 +73,10 @@ function isUTF8(buffer) {
   }
   
   const buffer = Buffer.from([59, 4, 78, 4, 52, 4, 56, 4, 61, 4, 56, 4]);
-  console.log(isUTF8(buffer), ' Stroka - ', buffer.toString('utf16le') ); // Вернет true, так как это корректная UTF-8 последовательность
-  
+  console.log(isUTF8(buffer), ' Stroka - ', buffer.toString('utf16le') ); // что то оно нифига не то возвращает (((
 
 
-
+  // еще один вариант ......
   function detectEncoding(buffer) {
     if (buffer.length % 2 === 0) {
       let isUTF16LE = true;
@@ -97,5 +97,5 @@ function isUTF8(buffer) {
   
   //const buffer = Buffer.from([59, 4, 78, 4, 52, 4, 56, 4, 61, 4, 56, 4]);
   const encoding = detectEncoding(buffer);
-  console.log(encoding); // Вернет 'utf16le' в данном случае
+  console.log(encoding); // Вернет 'utf16le' в данном случае --- должно было бы, но нет, возвращает utf8 ((
   

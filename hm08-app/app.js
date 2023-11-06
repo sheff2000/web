@@ -1,5 +1,9 @@
 import { Buffer } from 'node:buffer';
-import CodeBufferClass from './Classes/CodeBufferClass.js';
+import askUser from './Functions/askUser.js';
+import printArray from './Functions/printArray.js';
+import method1 from './Functions/method1.js';
+import method2 from './Functions/method2.js';
+
 
 const buffersArray = [
     Buffer.from([ 84, 4 ]),
@@ -13,51 +17,46 @@ const buffersArray = [
     Buffer.from([ 50, 4, 48, 4, 54, 4, 59, 4, 56, 4, 50, 4, 56, 4, 60, 4 ])
 ];
 
-const possibleEncodings = ['utf16le', 'utf8'];
-
-const maxLength = buffersArray.reduce((max, buffer) => {
-    const length = buffer.length;
-    return length > max ? length : max;
-  }, 0);
-
-let minus = '──';
-for (let index = 0; index < maxLength; index++) {
-    minus = minus + '───'; 
-}
-
+// const varEncodings = ['utf16le', 'utf8'];
 
 console.log('Задано буфер з закодованими стрічкам');
-console.log(`┌─────┬────────${minus}───┐`);
-buffersArray.forEach((buf, index)=> {
-    const spaces = ' '.repeat((maxLength - buf.length)*3);
-    console.log('│ ', index, ' | ', buf , spaces , ' |' );
-});  
-console.log(`└─────┴────────${minus}───┘`);
+printArray({arr:buffersArray});
 
 
-console.log('Визначимо кодування кожнох стрічки');
-console.log('Метод №1 - візуальний');
+method1(buffersArray, 'utf8')
+  .then((res_method1) => {
+    console.log('Метод 1 -  Візуальний.  Декодуємо по ЮТФ-8 та дивимось результат')
+    printArray({arr:res_method1});
+    return askUser('Результат ок? (1 - так / інше - ні): ');
+  })
+  .then((answer) => {
+    if (answer.toLowerCase() === '1') {
+      console.log('Отже це вірне кодування (UTF-8).');
+    } else {
+      console.log('Значит закодовано в UTF16le.');
+      printArray({arr:buffersArray}, 'utf16le');
+    }
 
-let encodingArray = [,];
+    console.log('---------------------------');
+    console.log('Метод - 2 - Тепер автоматичний метод визначення кодування.');
+    return method2(buffersArray);
+  })
+  .then((res_method2) => {
+    if (res_method2) {
+        printArray({arr:res_method2.buffer, encod:res_method2.encod, confidence:res_method2.confidence}, 'utf16le');
+        console.log('----------------------');
+        console.log('Отже декодований по Метод-2 буфер має вигляд:');
+        printArray({arr:res_method2.buffer}, res_method2.encod[0]);
 
-for (let index = 0; index < buffersArray.length; index++) {
-    console.log('Перевіряемо строку - ', index);
-    CodeBufferClass.method1(buffersArray[index]);
-}
-
-async function fun1(buf, index) {
-    console.log('Перевіряемо строку - ', index);
-    CodeBufferClass.method1(buf);
-}
-
-for (let index = 0; index < buffersArray.length; index++) {
-    await fun1(buffersArray[index], index);
-}
-
-/*encodingArray[0] = buffersArray.map(async (buf, index) => {
-
-    console.log('Перевіряемо строку - ', index);
-    CodeBufferClass.method1(buf);
-});
-CodeBufferClass.method2(buffersArray[3], possibleEncodings);
-*/
+        console.log('Що, чомусь, не відповідає дійсності.');
+        console.log('================ ЗАКОДОВАНА ФРАЗА  ================');
+        const arrSlova = [5,7,0,6,8,1,2,4,3];
+        const fraza = arrSlova.map(slov => buffersArray[slov].toString('utf16le'));
+        console.log(`========> ${fraza.join(' ')} <========`);
+        console.log('================ .................  ================');
+        
+    }
+  })
+  .catch((error) => {
+    console.error('Виникла помилка', error);
+  });

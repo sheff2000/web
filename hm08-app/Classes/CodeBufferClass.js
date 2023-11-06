@@ -1,4 +1,6 @@
-import iconv from 'iconv-lite';
+// короче, фиговая идея с классами - надо делать функции с промисами, чтобы ожидать ввода с клавиатуры 
+// удалить этот класс!!
+import iconv from 'iconv-lite'; // нифига нормально не определеяет
 import readline from 'readline';
 import jschardet from 'jschardet';
 
