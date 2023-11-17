@@ -2,16 +2,14 @@ const fs = require('fs/promises');
 const { constants } = require('fs');
 const path = require('path');
 
-async function argumentChecking(){
+async function argumentChecking(args){
     
-    console.log('----  Input parameter checking started ---- ');
-
-    const args = process.argv.slice(2);
     const res  = {
         err: true,
         msg: 'Error - unknow',
         filePath: null,
-        charCode: null
+        charCode: null,
+        byteSize: 0
     };
     // check number arguments
     if (args.length != 2) {
@@ -33,13 +31,21 @@ async function argumentChecking(){
 
     console.log("\u2714 (ok)  .... Second argument - its integer");
 
-    if (res.charCode > 255) {
+    if (res.charCode <= 0x7F) {
+        res.byteSize = 1;
+    } else if (res.charCode <= 0x7FF) {
+        res.byteSize = 2;
+    } else if (res.charCode <= 0xFFFF) {
+        res.byteSize = 3;
+    } else if (res.charCode <= 0x10FFFF) {
+        res.byteSize = 4;
+    } else {
         res.err = true;
-        res.msg = `<code Symbol> must be between 0 and 255!\n You set <code Symbol> - ${res.charCode}`;
+        res.msg = `Code point is out of range. You set <code Symbol> - ${res.charCode}`;
         return res;
     }
 
-    console.log("\u2714 (ok)  .... Second argument - between 0 and 255");
+    console.log("\u2714 (ok)  .... Second argument size - between 1 and 4 Byte (", res.byteSize ," byte)");
     // check access to file
     try {
         await fs.access(res.filePath, constants.R_OK);
