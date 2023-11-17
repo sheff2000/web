@@ -1,6 +1,7 @@
 utf 8
-ру А текст
+ру А текст Ф
 not ru A A text
 not ru A A text
-not ru A A text
+not ru A A text А
+ААА
 not ru A A text

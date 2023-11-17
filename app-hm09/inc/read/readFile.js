@@ -24,21 +24,33 @@ async function countInFile(args) {
         // бинарный файл либо многобайтовый код
         if (args.isBinary || args.byteSize > 1) {
             for (let i = 0; i <= data.length - args.byteSize; i += args.byteSize) {
+                let sequence = 0;
+                for (let j = 0; j < args.byteSize; j++) {
+                    sequence = (sequence << 8) | data[i + j]; //честно спер на стек-оверфл Надо запомнить будет!
+                }
+                if (sequence === args.charCode) {
+                    count++;
+                }
+            }
+
+            // если вводной код - 16ричный
+            /*
+            for (let i = 0; i <= data.length - args.byteSize; i += args.byteSize) {
                 let found = true;
                 for (let j = 0; j < args.byteSize; j++) {
                     // так ... вырезали кусок нужно размера и по байтам его сверяем
                     // если я не запутался то получится примерно так
-                    if (data[i + j] !== parseInt(args.charCode.slice(j * 2, j * 2 + 2))) {
+                    if (data[i + j] !== parseInt(args.charCode.slice(j * 2, j * 2 + 2),16)) {
                         found = false;
                         break;
                     }
                 }
                 if (found) count++;
-            }
+            } */
         } else {
             // остались одно байтовые
             for (let i = 0; i < data.length; i++) {
-                if (data[i] === parseInt(args.charCode)) {
+                if (data[i] === parseInt(args.charCode)) {  //parseInt(args.charCodeб 16) когда в 16ричном зададут
                     count++;
                 }
             }
