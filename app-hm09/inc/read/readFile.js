@@ -12,6 +12,7 @@ async function countInFile(args) {
             const dataString = data.toString('utf8'); // конвертим байтовый буфер в строку типа с ютф-8
             // не знаю как сделать что б оно автоматом пыталось понять ютф8 или ютф16
             // ну и дальше уже по символьно перебераем файл
+            // ASCII по кодам совпадает с ютф - так что все должно быть норм
             for (const char of dataString) {
                 if (char === targetChar) {
                     count++;
@@ -25,6 +26,8 @@ async function countInFile(args) {
             for (let i = 0; i <= data.length - args.byteSize; i += args.byteSize) {
                 let found = true;
                 for (let j = 0; j < args.byteSize; j++) {
+                    // так ... вырезали кусок нужно размера и по байтам его сверяем
+                    // если я не запутался то получится примерно так
                     if (data[i + j] !== parseInt(args.charCode.slice(j * 2, j * 2 + 2))) {
                         found = false;
                         break;
@@ -41,7 +44,7 @@ async function countInFile(args) {
             }
         }
         return count;
-        
+
     } catch (err) {
         console.error(`Error: ${err.message}`);
     }

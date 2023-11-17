@@ -2,7 +2,6 @@ const controllerCount = require('./inc/controllerCount.js');
 
 async function start(){
     try {
-        // check arguments
         await controllerCount();
 
     } catch(err) {
