@@ -4,7 +4,8 @@
     "scripts": {
       "start": "concurrently \"npm run server\" \"npm run client\"",
       "server": "cd server && node app.js",
-      "client": "cd client && npm run server  "
+      "client": "cd client && npm run server  ",
+       "install": "cd server && npm install && cd ../client && npm install"
     },
     "devDependencies": {
       "concurrently": "^5.2.0"
