@@ -37,7 +37,14 @@ const updateStudent = (id, newData) => {
 };
 
 const deleteStudent = (id) => {
-    // Логика удаления студента
+        try {
+            const index = dataStudents.findIndex(student => student.id === Number(id));
+            dataStudents.splice(index, 1);
+            return true;
+        } catch {
+            return false;
+        }
+        
 };
 
 module.exports = {

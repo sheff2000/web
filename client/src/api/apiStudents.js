@@ -50,6 +50,21 @@ export const opstUpdateStudentInfo = async (id, formData) => {
         const errorResponse = await response.json();
         throw new Error(errorResponse.message || `Error: ${response.status}`);
     }
-    return await response.json();
+    return response.json();
+};
+
+
+export const deleteStudent = async (id) => {
+  
+    const response = await fetch('/students/' + id, {
+        method: 'DELETE',
+        
+    });
+    
+    if (!response.ok) {
+        const errorResponse = await response.json();
+        throw new Error(errorResponse.message || `Error: ${response.status}`);
+    }
+    return response.json();
 };
 

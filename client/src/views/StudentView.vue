@@ -1,13 +1,15 @@
 <script setup>
-    import { useRoute } from 'vue-router';
+    import { useRoute, useRouter } from 'vue-router';
     import {useStudent} from '@/stores/studentStore';
     import { onMounted, ref } from 'vue';
 
     const route = useRoute();
+    const router = useRouter();
     const studentStore = useStudent();
     const studentId = route.params.id;
 
     const formResponse = ref('');
+    const formResponseDel = ref('');
 
     studentStore.isEdit = false; // пи открытии страницы эдит выключен
 
@@ -19,6 +21,17 @@
     const toggleEdit = () => {
         studentStore.isEdit = !studentStore.isEdit;
     };
+
+    const deleteStudent = async () => {
+        const response = await studentStore.deleteStudent(studentStore.student.id);
+        if (!response.isResponse) {
+            formResponseDel.value = 'Не змогли видалити - '+ response.response;
+        } else {
+             // перекидываем на главную
+            router.push(`/`);
+            
+        }
+    }
 
     const submitForm = async (event) => {
         event.preventDefault(); // отмена стандартной отправки
@@ -34,6 +47,8 @@
 
         console.log('RESPONSE after update - ',response);
     };
+
+
 </script>
 
 <template>
@@ -43,7 +58,7 @@
     <div class="container">
         <div v-if="studentStore.err" class="alert alert-danger">{{ studentStore.errMSG }}</div>
         <div v-else class="row">
-            <div class="col">
+            <div class="col info-student">
                 <p>ID: {{ studentStore.student.id }}</p>
                 <p>Name: {{ studentStore.student.firstName }} {{ studentStore.student.lastName }}</p>
                 <p>Group: {{ studentStore.student.group }}</p>
@@ -54,6 +69,14 @@
                         @click="toggleEdit">
                             {{ studentStore.isEdit ? 'Закрити' : 'Редагувати' }}
                 </button>
+
+                <button class="btn btn-danger" 
+                        @click="deleteStudent">
+                            Видалити
+                </button>
+                <div v-if="formResponseDel">
+                    <div class="alert alert-danger">{{ formResponseDel }}</div>
+                </div>
                 <div v-if="studentStore.isEdit">
                     <form class="alert alert-light" @submit="submitForm">
                         <div v-if="formResponse">{{ formResponse }}</div>
@@ -81,3 +104,12 @@
         </div>
     </div>
 </template>
+
+<style>
+    button {
+        margin-right: 30px;
+    }
+    .info-student {
+        text-align: center;
+    }
+</style>

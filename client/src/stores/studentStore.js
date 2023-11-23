@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { fetchStudentInfo, opstUpdateStudentInfo } from '@/api/apiStudents';
+import { fetchStudentInfo, opstUpdateStudentInfo, deleteStudent } from '@/api/apiStudents';
 
 export const useStudent = defineStore('student',{
     state: () => ({
@@ -34,10 +34,23 @@ export const useStudent = defineStore('student',{
                 const firstName = formData.get('firstName');
                 const lastName = formData.get('lastName');
             
-                console.log('FirstName:', firstName);
-                console.log('LastName:', lastName);
+                //console.log('FirstName:', firstName);
+                //console.log('LastName:', lastName);
                 const response = await opstUpdateStudentInfo(id, formData);
-                console.log(response);
+
+                this.student.firstName = firstName;
+                this.student.lastName  = lastName;
+                //console.log(response);
+                return {response, isResponse:true};
+                
+            } catch (error) {
+                return {response:error.message, isResponse:false};
+            }
+        },
+
+        async deleteStudent(id) {
+            try {
+                const response = await deleteStudent(id);
                 return {response, isResponse:true};
                 
             } catch (error) {

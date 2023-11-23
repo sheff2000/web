@@ -8,7 +8,7 @@ const validController = require('../controllers/validControllers.js');
 
 router.post('/', (req, res) => {
     console.log('Home Page');
-    res.status(200).send('Homde page');
+    res.status(200).send('API to work with Students Data');
 });
 // POST
 
@@ -56,7 +56,7 @@ router.put('/students/:id', (req, res) => {
         }
         return acc;
     }, []);
-    console.log(' Errors esult = ', errors);
+    //console.log(' Errors esult = ', errors);
     // смотрим что собрали
     if (errors.length > 0) {
         // что то собрали - значит ошибку на сервер
@@ -69,14 +69,28 @@ router.put('/students/:id', (req, res) => {
     if (!isUpdate) {
         return res.status(400).json({ message: "Виникла помилка при спробі оновити дані " });
     }
-    res.send("Студент обновлен");
+    res.status(200).json({ message: "Інформація про студента оновлена" });
 });
 
 
 
 // Delete : id
-router.delete('/items/:id', (req, res) => {
-    // Логика удаления Item по id
+router.delete('/students/:id', (req, res) => {
+    //console.log('Id delete - ', req.params);
+    const studentId = req.params.id;
+
+    const valid = validController.validStudentId(studentId);
+
+    if (!valid.status) {
+        return res.status(400).json({ message: valid.message });
+    }
+
+    const isDelete = studentsController.deleteStudent(studentId);
+    if (!isDelete) {
+        return res.status(400).json({ message: 'Не змогли видалити студента з масиву' });
+    }
+    
+    res.status(200).json({message:'Ok все видалено'});
 });
 
 module.exports = router;
