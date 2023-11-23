@@ -1,0 +1,14 @@
+{
+    "name": "hw10",
+    "version": "1.0.0",
+    "scripts": {
+      "start": "concurrently \"npm run server\" \"npm run client\"",
+      "server": "cd server && node app.js",
+      "client": "cd client && npm run server  ",
+      "install-all": "cd server && npm install && cd ../client && npm install"
+    },
+    "devDependencies": {
+      "concurrently": "^5.2.0"
+    }
+  }
+  
