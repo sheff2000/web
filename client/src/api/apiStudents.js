@@ -1,4 +1,3 @@
-//const BASE_URL = 'http://localhost:3000/';
 
 export const fetchstudents = async () => {
       try {
@@ -61,6 +60,22 @@ export const deleteStudent = async (id) => {
         
     });
     
+    if (!response.ok) {
+        const errorResponse = await response.json();
+        throw new Error(errorResponse.message || `Error: ${response.status}`);
+    }
+    return response.json();
+};
+
+export const fetchAddStudent = async (formData) => {
+    const response = await fetch('/students/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(Object.fromEntries(formData))
+    });
+
     if (!response.ok) {
         const errorResponse = await response.json();
         throw new Error(errorResponse.message || `Error: ${response.status}`);

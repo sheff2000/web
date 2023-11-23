@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { fetchstudents } from '@/api/apiStudents';
+import { fetchstudents, fetchAddStudent } from '@/api/apiStudents';
 
 export const useStudents = defineStore('students',{
     state: () => ({
@@ -30,5 +30,17 @@ export const useStudents = defineStore('students',{
                 this.errMSG = error;
             }
         },
+
+        async addStudent(formData){
+            try {
+              
+                await fetchAddStudent(formData);
+                return {status:true};
+
+            } catch(error) {
+                console.error("Error add student:", error);
+                return {status: false, msg:error};
+            }
+        }
     }
 });

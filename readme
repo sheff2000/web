@@ -1,3 +1,9 @@
+Запуск фронт + бєк - кманда: npm run start 
+Запуск фронт  - кманда: npm run client 
+Запуск бєк - кманда: npm run server 
+
+
+
 Домашнє завдання №10 (робота з Express.js)
 НЕОБХІДНО створити на базі фреймворку Express сервер обробки запитів CRUD
 API (CRUD це Create/Read/Update/Delete), який буде обробляти масив даних

@@ -1,6 +1,7 @@
 <script setup>
     import { useRoute, useRouter } from 'vue-router';
     import {useStudent} from '@/stores/studentStore';
+    import FormStudent from '@/components/FormStudent.vue';
     import { onMounted, ref } from 'vue';
 
     const route = useRoute();
@@ -8,7 +9,6 @@
     const studentStore = useStudent();
     const studentId = route.params.id;
 
-    const formResponse = ref('');
     const formResponseDel = ref('');
 
     studentStore.isEdit = false; // пи открытии страницы эдит выключен
@@ -32,22 +32,6 @@
             
         }
     }
-
-    const submitForm = async (event) => {
-        event.preventDefault(); // отмена стандартной отправки
-        const formData = new FormData(event.target);
-       
-        const response = await studentStore.updateStudentInfo(studentStore.student.id, formData);
-
-        if (!response.isResponse) {
-            formResponse.value = 'Помилка при спробі оновити дані! : '+ response.response;
-        } else {
-            formResponse.value = 'Все ок - дані оновили ';
-        }
-
-        console.log('RESPONSE after update - ',response);
-    };
-
 
 </script>
 
@@ -78,27 +62,11 @@
                     <div class="alert alert-danger">{{ formResponseDel }}</div>
                 </div>
                 <div v-if="studentStore.isEdit">
-                    <form class="alert alert-light" @submit="submitForm">
-                        <div v-if="formResponse">{{ formResponse }}</div>
-                        <input type="hidden" name="id" :value=studentStore.student.id>
-                        <div class="mb-3">
-                            <div class="input-group">
-                                <span class="input-group-text">First and last name</span>
-                                <input type="text" name="firstName" aria-label="First name" class="form-control" :value=studentStore.student.firstName required>
-                                <input type="text" name="lastName" aria-label="Last name" class="form-control" :value=studentStore.student.lastName required>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <div class="input-group mb-3">
-                                <span class="input-group-text" id="inputGroup-sizing-default">Group</span>
-                                <input type="text" class="form-control" :value=studentStore.student.group disabled>
-                                <span class="input-group-text" id="inputGroup-sizing-default">Rate</span>
-                                <input type="text" class="form-control" :value=studentStore.student.rate disabled>
-                            </div>
-
-                        </div>
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </form>
+                    
+                    <FormStudent 
+                        :student = studentStore.student 
+                        clickBtn = "update">
+                    </FormStudent>
                 </div>
             </div>
         </div>

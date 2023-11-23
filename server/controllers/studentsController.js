@@ -1,26 +1,40 @@
-let { dataStudents } = require('../dataBase/db.js');
+let { dataStudents } = require('../dataBase/db.js'); //либо подключаем наш файл с функциями для работы с БД
 
-const getStudents = () => {
+const getStudents = async () => {
     // поляем всех студентов
     return dataStudents;
 };
 
-const getStudentInfo = (id) => {
+const getStudentInfo = async (id) => {
 
     const student = dataStudents.find(student => student.id.toString() === id);
     if (!student) {
         // студента нет
-        return null; // или выбросить исключение, или вернуть сообщение об ошибке
+        return null; 
     }
     return student;
 };
 
-const addStudent = (student) => {
-    // Логика добавления нового студента
-    dataStudents.push(student);
+const addStudent = async (studentData) => {
+    try {
+        const maxId = dataStudents.reduce((max, student) => student.id > max ? student.id : max, 0);
+
+        dataStudents.push({ 
+            id: maxId + 1,
+            firstName: studentData.firstName,
+            lastName: studentData.lastName,
+            group: studentData.group,
+            rate: studentData.rate
+        });
+    } catch (error) {
+        console.error('шось ошибка при добалвении: ', error);
+        return false;
+    }
+
+   return true;
 };
 
-const updateStudent = (id, newData) => {
+const updateStudent = async (id, newData) => {
     const index = dataStudents.findIndex(student => student.id === Number(id));
     console.log('updateStudent (id, newData) = ', id, ' || ', newData);
     if (index !== -1) {
@@ -36,7 +50,7 @@ const updateStudent = (id, newData) => {
     }
 };
 
-const deleteStudent = (id) => {
+const deleteStudent = async (id) => {
         try {
             const index = dataStudents.findIndex(student => student.id === Number(id));
             dataStudents.splice(index, 1);

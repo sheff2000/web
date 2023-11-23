@@ -28,9 +28,37 @@ const validName = (name) => {
      return {status:true};
  };
 
+ const validGroup = (group) => {
+    const groupNumber = parseInt(group);
 
+    if (isNaN(groupNumber)) {
+        return { status: false, message: "Поле group має бути числом." };
+    }
+
+    if (groupNumber < 0 || groupNumber > 1000) {
+        return { status: false, message: "Значення group має бути в межах від 0 до 1000." };
+    }
+
+    return { status: true };
+};
+
+const validRate = (rate) => {
+    const rateNumber = parseFloat(rate);
+
+    if (isNaN(rateNumber)) {
+        return { status: false, message: "Поле rate має бути числом." };
+    }
+
+    if (rateNumber < 0 || rateNumber > 10) {
+        return { status: false, message: "Значення rate має бути в межах від 0 до 10." };
+    }
+
+    return { status: true };
+};
 
 module.exports = {
     validStudentId,
-    validName
+    validName,
+    validGroup,
+    validRate
 };
