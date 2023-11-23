@@ -1,3 +1,4 @@
+інсталл фронт+бек  -- команда: npm run install
 Запуск фронт + бєк - кманда: npm run start 
 Запуск фронт  - кманда: npm run client 
 Запуск бєк - кманда: npm run server 
